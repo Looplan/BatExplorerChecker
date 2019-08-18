@@ -21,18 +21,23 @@ namespace BatExplorerChecker
 
         private List<string> log = new List<string>();
 
+        private ProgressDialog ProgressDialog { get; set; }
+
         private void Form1_Load(object sender, EventArgs e)
         {
             this.Size = new Size(0, 0);
+            this.ProgressDialog = new ProgressDialog();
         }
 
-        private void Form1_Shown(object sender, EventArgs e)
+        private async void Form1_Shown(object sender, EventArgs e)
         {
             string folderPath = SelectFolder();
 
             if (folderPath != null)
             {
-                DeleteIncompleteRecordsFromFolder(folderPath);
+                this.ProgressDialog.Show();
+                await DeleteIncompleteRecordsFromFolder(folderPath);
+                this.ProgressDialog.Hide();
                 ShowLog();
             }
             Close();
@@ -45,17 +50,27 @@ namespace BatExplorerChecker
             DialogResult result = dialog.ShowDialog(this);
         }
 
-        private void DeleteIncompleteRecordsFromFolder(string folderPath)
+        private async Task DeleteIncompleteRecordsFromFolder(string folderPath)
         {
             DirectoryInfo directoryInfo = new DirectoryInfo(folderPath);
 
-            List<Record> incompleteRecords = GetIncompleteRecordsFromFolder(directoryInfo);
+            this.ProgressDialog.StatusLabel.Text = "Wat zou er niet compleet zijn? Even kijken...";
+            List<Record> incompleteRecords = await GetIncompleteRecordsFromFolder(directoryInfo);
+
+            if(incompleteRecords.Count > 0)
+            {
+                this.ProgressDialog.StatusLabel.Text = incompleteRecords.Count + " incomplete opnames gevonden.";
+            } else
+            {
+                this.ProgressDialog.StatusLabel.Text = "Niks incompleet gevonden.";
+            }
 
             foreach (Record record in incompleteRecords)
             {
                 LogDeleteRecord(record);
-                DeleteRecord(record);
+                await DeleteRecord(record);
             }
+            this.ProgressDialog.StatusLabel.Text = "Klaar";
         }
 
         private void LogDeleteRecord(Record record)
@@ -63,15 +78,18 @@ namespace BatExplorerChecker
             log.Add(record.Name);
         }
 
-        private void DeleteRecord(Record record)
+        private Task DeleteRecord(Record record)
         {
-            record.AudioFile?.Delete();
-            record.MetaDataFile?.Delete();
+            return Task.Run(() =>
+            {
+                record.AudioFile?.Delete();
+                record.MetaDataFile?.Delete();
+            });
         }
 
-        private List<Record> GetIncompleteRecordsFromFolder(DirectoryInfo folder)
+        private async Task<List<Record>> GetIncompleteRecordsFromFolder(DirectoryInfo folder)
         {
-            List<Record> records = Record.FromDirectory(folder);
+            List<Record> records = await Record.FromDirectory(folder);
             List<Record> incompleteRecords = records.Where((record) =>
             {
                 return !record.HasAudioFile() || !record.HasMetaDataFile();

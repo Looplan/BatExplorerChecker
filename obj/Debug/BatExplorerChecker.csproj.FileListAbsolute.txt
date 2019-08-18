@@ -109,3 +109,8 @@ C:\Users\stesi\source\repos\BatLoggerSoftware\BatExplorerChecker\obj\Debug\BatEx
 C:\Users\stesi\source\repos\BatLoggerSoftware\BatExplorerChecker\obj\Debug\BatExplorerChecker.exe
 C:\Users\stesi\source\repos\BatLoggerSoftware\BatExplorerChecker\obj\Debug\BatExplorerChecker.pdb
 C:\Users\stesi\source\repos\BatLoggerSoftware\BatExplorerChecker\obj\Debug\BatExplorerChecker.RecordListDialog.resources
+C:\Users\stesi\source\repos\BatLoggerSoftware\BatExplorerChecker\bin\Debug\BatExplorerChecker.exe.manifest
+C:\Users\stesi\source\repos\BatLoggerSoftware\BatExplorerChecker\bin\Debug\BatExplorerChecker.application
+C:\Users\stesi\source\repos\BatLoggerSoftware\BatExplorerChecker\obj\Debug\BatExplorerChecker.exe.manifest
+C:\Users\stesi\source\repos\BatLoggerSoftware\BatExplorerChecker\obj\Debug\BatExplorerChecker.application
+C:\Users\stesi\source\repos\BatLoggerSoftware\BatExplorerChecker\obj\Debug\BatExplorerChecker.ProgressDialog.resources
